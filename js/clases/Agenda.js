@@ -9,21 +9,10 @@ export default class Agenda {
     console.log("agenda constructor");
     this.$container = $container;
     this.agendaDAO = new AgendaDAO();
-
-    // Cargar los datos de Firestore
-    this.loadContacts();
-
+    
     // Renderizar de nuevo la seccion "Listar" cada vez que se actualicen los contactos de la firestore
     // Tengo que usar el .bind(this) por que si no da error (se pierde el contexto)
     this.agendaDAO.onContactsChange(this.updateContacts.bind(this));
-  }
-
-  async loadContacts() {
-    try {
-      this.renderListSection(); // Al cargar, se renderiza directamente la lista desde la base de datos
-    } catch (error) {
-      console.error("Error al cargar los contactos:", error);
-    }
   }
 
   /**********************************************************************************************************
@@ -172,9 +161,12 @@ export default class Agenda {
 
           $deleteButton.addEventListener("click", () => {
             console.log("Eliminando el contacto", contact);
-            this.agendaDAO.deleteContact(contact.id).then(() => {
-              this.renderListSection(); // Volver a cargar la lista después de eliminar el contacto
-            }).catch(error => console.error("Error al eliminar contacto", error));
+            this.agendaDAO
+              .deleteContact(contact.id)
+              .then(() => {
+                this.renderListSection(); // Volver a cargar la lista después de eliminar el contacto
+              })
+              .catch((error) => console.error("Error al eliminar contacto", error));
           });
 
           $listSection.appendChild($contactContainer);
@@ -378,9 +370,14 @@ export default class Agenda {
         $error.textContent = "No se ha seleccionado ningún contacto";
         return;
       }
-            
+
       // Comprobar si hay algún campo vacío
-      if ($name.value.trim() === "" || $surname.value.trim() === "" || $address.value.trim() === "" || $tel.value.trim() === "") {
+      if (
+        $name.value.trim() === "" ||
+        $surname.value.trim() === "" ||
+        $address.value.trim() === "" ||
+        $tel.value.trim() === ""
+      ) {
         $error.textContent = "Rellena todos los campos subnormal";
         return;
       }
@@ -393,7 +390,8 @@ export default class Agenda {
         tel: $tel.value.trim(),
       };
 
-      this.agendaDAO.updateContact(contact.id, updatedContact)
+      this.agendaDAO
+        .updateContact(contact.id, updatedContact)
         .then(() => {
           console.log("Contacto actualizado");
           this.render(SECTIONS.LIST); // Volver a cargar la lista de contactos
@@ -421,7 +419,8 @@ export default class Agenda {
 
     const newContact = { name, surname, address, tel };
 
-    this.agendaDAO.addContact(newContact)
+    this.agendaDAO
+      .addContact(newContact)
       .then(() => {
         $error.textContent = "Contacto añadido correctamente";
         this.render(SECTIONS.LIST); // Volver a cargar la lista después de añadir el contacto
