@@ -211,6 +211,7 @@ main {
       padding: 0.5em 1em;
       margin: 0.5em;
       border-radius: 0.5em;
+      background-color: #222222;
 
       @media (max-width: 768px) {
         grid-template-columns: 1fr;
@@ -253,7 +254,7 @@ main {
             text-align: center;
             width: 50%;
             justify-self: center;
-            background-color: rgb(102, 102, 102);
+            background-color: rgb(40, 40, 40);
           }
 
           &:hover {
@@ -298,7 +299,11 @@ main {
     }
 
     input {
-      width: 65%;
+      width: 80%;
+
+       @media (max-width: 768px){
+        width: 65%;
+       }
     }
 
     #error {
