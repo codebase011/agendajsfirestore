@@ -283,14 +283,20 @@ main {
     /* Para el botón */
     .fila-alinear-dcha {
       display: flex;
-      /* justify-content: end; */
       padding: 1em;
       gap: 1em;
+      justify-content: end;
+
     }
 
     button {
-      width: 50%;
+      width: 20%;
       height: 3em;
+
+      @media (max-width: 768px){
+        width: 50%;
+        height: 3em;
+       }
 
       &:disabled {
         color: rgb(170, 170, 170);
